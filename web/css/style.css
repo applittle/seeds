@@ -64,6 +64,11 @@ body {
     -moz-border-radius: 5px;   /* Firefox用 */
 }
 
+.login-box .form-box p.small-font {
+	border:none;
+	font-size:80%;
+}
+
 /*----------------------------------
 　管理画面内
 ----------------------------------*/
