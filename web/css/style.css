@@ -1,0 +1,159 @@
+@charset "UTF-8";
+body {
+    font-family:"メイリオ", Meiryo;
+    background-color:#FAFAFA;
+}
+
+/*----------------------------------
+　ログイン画面内
+----------------------------------*/
+.login-box {
+    padding:50px;
+    text-align:center;
+}
+.login-box .logo{
+    width: 40%;
+    height: auto;
+}
+.login-box .form-box{
+    padding: 10px 70px 40px 40px;
+    margin: 10px auto;
+    width: 30%;
+    border: 3px solid #CCC;
+    text-align: center;
+    border-radius: 10px;        /* CSS3草案 */
+    -webkit-border-radius: 10px;    /* Safari,Google Chrome用 */
+    -moz-border-radius: 10px;   /* Firefox用 */
+    background-color: #FFF;
+    box-shadow: 0px 0px 5px #CCC;       /* CSS3草案 */  
+    -moz-box-shadow: 0px 0px 5px #CCC;　/* Firefox用 */
+    -webkit-box-shadow: 0px 0px 5px #CCC;　/* Safari,Google Chrome用 */
+}
+.login-box .form-box p {
+    text-align:left;
+    border-left:8px solid #13688F;
+    padding:0 0 0 5px;
+    font-size:120%;
+    margin:30px 0 5px 0;
+    text-shadow:1px 1px 3px #333;
+}
+
+.login-box .form-box input[type=text],
+.login-box .form-box input[type=password] {
+    text-align:left;
+    padding:10px;
+    width:100%;
+    font-size:150%;
+    border:1px solid #CCC;
+    border-radius: 5px;        /* CSS3草案 */  
+    -webkit-border-radius: 5px;    /* Safari,Google Chrome用 */  
+    -moz-border-radius: 5px;   /* Firefox用 */
+}
+
+.login-box .form-box input[type=submit] {
+    padding:10px;
+    width:50%;
+    text-align:center;
+    background-color:#FF8B00;
+    font-size:150%;
+    color: #FFFFFF;
+    text-shadow:1px 1px 3px #333;
+    margin:10px 0 0 0;
+    border-radius: 5px;        /* CSS3草案 */  
+    -webkit-border-radius: 5px;    /* Safari,Google Chrome用 */  
+    -moz-border-radius: 5px;   /* Firefox用 */
+}
+
+/*----------------------------------
+　管理画面内
+----------------------------------*/
+.admin-box {
+    padding: 10px 50px;
+    text-align:left;
+}
+
+.admin-box .left-box{
+    padding: 2%;
+    width:20%;
+    float:left;
+}
+
+.admin-box .right-box{
+    padding: 2%;
+    width:70%;
+    float:right;
+}
+
+.header {
+    clear:both;
+    font-size:80%;
+}
+.footer {
+    clear:both;
+    text-align:center;
+}
+.footer .copyright {
+    padding:10px;
+}
+
+.report-box {
+    padding:10px;
+
+}
+.report-box table {
+    margin:10px 0;
+    border-collapse:collapse;
+}
+.report-box table th,
+.report-box table td {
+    border:1px solid #ccc;
+    padding:5px;
+}
+.report-box table th {
+    background-color:#EEEEEE;
+}
+.report-box table td {
+    background-color:#FFFFFF;
+}
+
+.show_log {
+    padding:10px;
+
+}
+.show_log table {
+    margin:10px 0;
+    border-collapse:collapse;
+}
+.show_log table th,
+.show_log table td {
+    border:1px solid #ccc;
+    padding:5px;
+}
+.show_log table th {
+    background-color:#EEEEEE;
+}
+.show_log table td {
+    background-color:#FFFFFF;
+}
+
+
+
+.access-box {
+    padding:10px;
+
+}
+.access-box table {
+    margin:10px 0;
+    border-collapse:collapse;
+}
+.access-box table th,
+.access-box table td {
+    border:1px solid #ccc;
+    padding:5px;
+}
+.access-box table th {
+    background-color:#EEEEEE;
+}
+.access-box table td {
+    background-color:#FFFFFF;
+}
