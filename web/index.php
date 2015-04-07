@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ログイン</title>
+<title>ログイン２</title>
 <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 
