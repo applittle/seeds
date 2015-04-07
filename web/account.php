@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>アクセス制御</title>
+<title>アカウント管理</title>
 <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -22,34 +22,23 @@
 
 <div class="right-box">
 <div class="access-box" id="access-box">
-
+<a href="create_account.php">アカウントの追加はこちらから</a>　｜　<a href="forgot_password.php">パスワードを忘れた方はこちら</a>
 <table width="100%">
   <tbody>
     <tr>
-      <th>設定場所</th>
-      <td>/home/aaa/bbb</td>
-      <td><form><input type="submit"  value="参照"></form></td>
-    </tr>
-  </tbody>
-</table>
-
-
-<table width="100%">
-  <tbody>
-    <tr>
-      <th>PC名</th>
-      <th>状態</th>
-      <th>アクセス許可</th>
+      <th>ユーザー名</th>
+      <th>メールアドレス</th>
+      <th>削除</th>
     </tr>
     <tr>
-      <td>yoshio-pc</td>
-      <td>可</td>
-      <td><form><input type="submit"  value="不可にする"></form></td>
+      <td>yoshio</td>
+      <td>aaa@a.com</td>
+      <td><form><input type="submit"  value="削除"></form></td>
     </tr>
     <tr>
-      <td>yoshio-pc2</td>
-      <td>不可</td>
-      <td><form><input type="submit"  value="可にする"></form></td>
+      <td>yoshio2</td>
+      <td>bbb@b.com</td>
+      <td><form><input type="submit"  value="削除"></form></td>
     </tr>
   </tbody>
 </table>
