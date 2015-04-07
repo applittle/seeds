@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>アクセス制御</title>
+<title>ログイン</title>
 <link href="css/style.css" rel="stylesheet" type="text/css">
 </head>
 
@@ -16,7 +16,6 @@
   <ul>
     <li><a href="log.php">ログ監視</a></li>
     <li><a href="access.php">アクセス制御</a></li>
-    <li><a href="account.php">アカウント管理</a></li>
   </ul>
 </div>
 

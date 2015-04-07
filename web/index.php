@@ -18,8 +18,6 @@
   <input type="password" name="textfield" id="textfield" >
   <input type="submit" value="ログイン">
 </form>
-<p class="small-font">&gt; <a href="forgot_password.php">パスワードを忘れた方</a></p>
-<p class="small-font">&gt; <a href="create_account.php">新規アカウント登録</a></p>
 </div>
 </div>
 </body>

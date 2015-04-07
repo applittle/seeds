@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>ログ監視</title>
+        <title>ログイン</title>
         <link href="css/style.css" rel="stylesheet" type="text/css">
         <script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
         <script src="js/crawl.js"></script>
@@ -18,7 +18,6 @@
                 <ul>
                     <li><a href="log.php">ログ監視</a></li>
                     <li><a href="access.php">アクセス制御</a></li>
-                    <li><a href="account.php">アカウント管理</a></li>
                 </ul>
             </div>
 
