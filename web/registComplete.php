@@ -27,22 +27,14 @@ if ($_POST['mode'] == "registComplete") {
         $db->query($sql);
         $db->close();
 
-        /* セッション情報を削除 */
         session_destroy();
 
         print("情報を登録しました。登録情報でログインできます。<br />");
         header("Location: ./index.php");
     } elseif ($_POST['return']) {
-
-        /* submitボタンが「もとへ戻る」だった場合、登録フォームへ移動 */
-
         header("Location: ./registForm.php");
     }
 } else {
-
-    /* hidden値が不正、もしくはsubmitボタンで渡されたname値が
-      不正な場合、エラーメッセージを表示して、セッション情報削除 */
-
     print("不正なURLから呼び出された可能性があります。");
     session_destroy();
 }
