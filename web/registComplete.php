@@ -4,15 +4,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
 
-/* 確認画面からの遷移かどうかをチェック 
-  POSTで渡ったmodeの値が正しいかどうか、を確認 */
-
 if ($_POST['mode'] == "registComplete") {
-
-    /*
-      入力値により処理を切り分け
-      nameがreturnの場合、登録せずに入力画面へ強制遷移
-      nameがregistの場合、登録処理を実行 */
 
     if ($_POST['regist']) {
 

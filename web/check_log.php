@@ -10,7 +10,7 @@ foreach ($ls as $val) {
     $parts = explode('.', $val);
     if (count($parts) === 5 or count($parts) === 1) { // Means IP add or non-related log
         continue;
-    } else if (strcmp($parts[1], 'smbd') === 0) {
+    } else if (strcmp($parts[1], 'smbd') === 0 or strcmp($parts[1], 'nmbd') === 0 or strcmp($parts[1], '%m') === 0) {
         continue;
     } else {
         array_push($logs, $val);

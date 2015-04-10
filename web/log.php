@@ -6,6 +6,12 @@
         <link href="css/style.css" rel="stylesheet" type="text/css">
         <script src="//code.jquery.com/jquery-2.1.0.min.js"></script>
     </head>
+    <?php
+    if (session_status() !== PHP_SESSION_ACTIVE) {
+        session_start();
+    }
+    $userid = $_SESSION['USERID'];
+    ?>
 
     <body>
         <div class="admin-box">
@@ -44,7 +50,7 @@
 
         <script type="text/javascript">
             // <![CDATA[
-            
+
             var log_array = [];
             var dup_array = [];
             var host_array = [];
