@@ -2,6 +2,12 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/Library/WebServer/Documents/seeds/web/registComplete.php</file>
+            <file>file:/Library/WebServer/Documents/seeds/web/registConfirm.php</file>
+            <file>file:/Library/WebServer/Documents/seeds/web/create_account.php</file>
+            <file>file:/Library/WebServer/Documents/seeds/web/registCheck.php</file>
+            <file>file:/Library/WebServer/Documents/seeds/web/index.php</file>
+        </group>
     </open-files>
 </project-private>
