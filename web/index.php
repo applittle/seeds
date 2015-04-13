@@ -21,8 +21,21 @@ CREATE TABLE IF NOT EXISTS `account_info` (
   email varchar(100) DEFAULT NULL
 )
 EOF;
+    $db->query($sql);
 
-    $db->query($sql); // Create DB if not exists
+    /** For storing host access info
+     * enabled 0 for disabled, 1 for enabled.
+     * As default is is enabled.
+    **/
+    $sql = <<<EOF
+CREATE TABLE IF NOT EXISTS `host_access_info` (
+  ipaddress varchar(30) UNIQUE NOT NULL,
+  hostname varchar(20) DEFAULT NULL,
+  enabled varchar(2) DEFAULT '1'
+)
+EOF;
+    $db->query($sql);
+
 // エラーメッセージの初期化
     $errorMessage = "";
 
