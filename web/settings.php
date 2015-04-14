@@ -78,7 +78,7 @@
                     <?php
                     if ($settings_updated)
                     {
-                        echo '設定を反映しました。';
+                        echo '<strong>設定を反映しました。</strong>';
                     }
                     ?>
                 </div>

@@ -276,12 +276,19 @@
 <?php $log_interval = getLogInteval(); ?>
                 var counter = Number(<?php echo $log_interval; ?>);
                 setInterval(function () {
-                    counter = counter - 1;
-                    $('#counter').html('ログの更新まで ' + counter + '...');
+                    if (log_array.length > 0)
+                    {
+                        counter = counter - 1;
+                        $('#counter').html('ログの更新まで ' + counter + '...');
 
-                    if (counter === 0) {
-                        counter = Number(<?php echo $log_interval; ?>);
-                        update();
+                        if (counter === 0) {
+                            counter = Number(<?php echo $log_interval; ?>);
+                            update();
+                        }
+                    }
+                    else if (log_array.length === 0)
+                    {
+                        $('#counter').html('<strong>表示できるログ情報がありません。設定画面より、ログファイルへのパスを確認してください。</strong>');
                     }
                 }, 1000);
 
