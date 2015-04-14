@@ -100,18 +100,19 @@
                 $('#log_tableb').append('</tr>');
 
                 for (var i = 0; i < log_array.length; i++) {
+                    var host = log_array[i].host;
                     var d = new Date(log_array[i].date);
                     var year = (d.getYear() < 2000) ? d.getYear() + 1900 : d.getYear();
+                    var month = d.getMonth() + 1;
 
-                    if (log_array[i].host === host_selected
-                            || host_selected === '全て'
-                            || year === year_selected
-                            || d.getMonth() + 1 === month_selected)
+                    if ((host == host_selected || host_selected == '全て')
+                            && year == year_selected
+                            && month == month_selected)
                     {
                         $('#log_tableb').append('<tr>');
                         $('#log_tableb').append('<td>' + log_array[i].host + '</td>');
                         $('#log_tableb').append('<td>' + log_array[i].date + '</td>');
-                        $('#log_tableb').append('<td>' + 'null' + '</td>');
+                        $('#log_tableb').append('<td>' + log_array[i].location + '</td>');
                         $('#log_tableb').append('<td>' + log_array[i].message + '</td>');
                         $('#log_tableb').append('</tr>');
                     }
