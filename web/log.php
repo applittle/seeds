@@ -23,7 +23,7 @@
                 <ul>
                     <li><a href="log.php">ログ監視</a></li>
                     <li><a href="access.php">アクセス制御</a></li>
-                    <li><a href="account.php">アカウント管理</a></li>
+                    <li><a href="settings.php">設定管理</a></li>
                 </ul>
             </div>
 

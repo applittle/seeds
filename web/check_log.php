@@ -9,21 +9,21 @@ function grepAndFormatLog($message) {
         $retArray = array('location' => $array[1], 'message' => '共有フォルダに接続しました。');
         return $retArray;
     }
-    
+
     // 2. Open some file
     preg_match("/opened file (.*) read/", $message, $array);
     if (isset($array[1])) {
         $retArray = array('location' => $array[1], 'message' => 'ファイルを生成、または開きました。');
         return $retArray;
     }
-    
+
     // 3. Close some file
     preg_match("/closed file (.*) (numopen/", $message, $array);
     if (isset($array[1])) {
         $retArray = array('location' => $array[1], 'message' => 'ファイルを閉じました。');
         return $retArray;
     }
-    
+
     // 4. Close the connection to share
     preg_match("/closed connection to service (.*)/", $message, $array);
     if (isset($array[1])) {
@@ -34,7 +34,26 @@ function grepAndFormatLog($message) {
     return null;
 }
 
-$log_location = '/var/log/samba/';
+if (session_status() !== PHP_SESSION_ACTIVE) {
+    session_start();
+}
+$userid = $_SESSION['USERID'];
+// Using sqlite as DB source, create a new DB 'seeds' if not exists.
+$db = new SQLite3('./seeds.db');
+
+// Fetch log settings info from DB.
+$sql = "SELECT * FROM log_settings";
+$result = $db->query($sql);
+if (!isset($result)) {
+    $db->close();
+    die("設定より監視ログを指定して下さい。");
+}
+
+while ($row = $result->fetchArray()) {
+    $log_location = $row['log_path'];
+}
+
+$db->close();
 
 exec('ls ' . $log_location, $ls);
 

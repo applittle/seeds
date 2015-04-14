@@ -26,7 +26,7 @@ EOF;
     /** For storing host access info
      * enabled 0 for disabled, 1 for enabled.
      * As default is is enabled.
-    **/
+     * */
     $sql = <<<EOF
 CREATE TABLE IF NOT EXISTS `host_access_info` (
   ipaddress varchar(30) UNIQUE NOT NULL,
@@ -35,6 +35,27 @@ CREATE TABLE IF NOT EXISTS `host_access_info` (
 )
 EOF;
     $db->query($sql);
+
+    /** For storing settings for Logazer.
+     * log_path to specify the log should be traced
+     * log interval to specify the log interval
+     * */
+    $sql = <<<EOF
+CREATE TABLE IF NOT EXISTS `log_settings` (
+  log_path varchar(50) NOT NULL,
+  log_interval varchar(5) NOT NULL
+)
+EOF;
+    $db->query($sql);
+
+    $sql = "SELECT log_path FROM log_settings";
+    $result = $db->query($sql);
+    $flag = $result->fetchArray();
+
+    if (!$flag) {
+        $sql = "INSERT INTO log_settings (log_path, log_interval) VALUES ('/var/log/samba/', '60')";
+        $db->query($sql);
+    }
 
 // エラーメッセージの初期化
     $errorMessage = "";
