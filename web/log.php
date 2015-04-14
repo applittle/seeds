@@ -10,24 +10,29 @@
     if (session_status() !== PHP_SESSION_ACTIVE) {
         session_start();
     }
+
     $userid = $_SESSION['USERID'];
 
-    // Using sqlite as DB source, create a new DB 'seeds' if not exists.
-    $db = new SQLite3('./seeds.db');
+    function getLogInteval() {
 
-    // Fetch log settings info from DB.
-    $sql = "SELECT * FROM log_settings";
-    $result = $db->query($sql);
-    if (!isset($result)) {
+        // Using sqlite as DB source, create a new DB 'seeds' if not exists.
+        $db = new SQLite3('./seeds.db');
+
+        // Fetch log settings info from DB.
+        $sql = "SELECT * FROM log_settings";
+        $result = $db->query($sql);
+        if (!isset($result)) {
+            $db->close();
+            die("設定より監視ログを指定して下さい。");
+        }
+
+        while ($row = $result->fetchArray()) {
+            $log_interval = $row['log_interval'];
+        }
+
         $db->close();
-        die("設定より監視ログを指定して下さい。");
+        return $log_interval;
     }
-
-    while ($row = $result->fetchArray()) {
-        $log_interval = $row['log_interval'];
-    }
-
-    $db->close();
     ?>
 
     <body>
@@ -46,12 +51,10 @@
 
             <div class="right-box">
                 <div class="log-box" id="log-box">
-                    <form>
-                        <input type="submit"  value="CSVダウンロード">
-                    </form>
                     <div id="select-box"></div>
                     <div id="report-box" class="report-box">
                     </div>
+                    <div id="counter"></div>
                 </div>
 
 
@@ -159,10 +162,13 @@
 
                     $.ajax('./check_log.php', {
                         type: "POST",
+                        async: true,
                         cache: false,
                         data: data,
                         success: function (res) {
                             var arr = JSON.parse(res);
+                            console.log('Returned array length: ' + arr.length);
+
                             // Put parsed values into array
                             for (var i = 0; i < arr.length; i++)
                             {
@@ -267,13 +273,14 @@
                     });
                 };
 
+<?php $log_interval = getLogInteval(); ?>
                 var counter = Number(<?php echo $log_interval; ?>);
                 setInterval(function () {
                     counter = counter - 1;
                     $('#counter').html('ログの更新まで ' + counter + '...');
 
                     if (counter === 0) {
-                        counter = 60;
+                        counter = Number(<?php echo $log_interval; ?>);
                         update();
                     }
                 }, 1000);

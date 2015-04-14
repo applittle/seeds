@@ -13,9 +13,32 @@
 
     // Using sqlite as DB source, create a new DB 'seeds' if not exists.
     $db = new SQLite3('./seeds.db');
-    
-    
-    
+    $settings_updated = False;
+
+    if (isset($_POST['log_settings'])) {
+        $log_path = $_POST['log_path'];
+        $log_interval = $_POST['log_interval'];
+
+        $sql = "UPDATE log_settings SET log_path = '$log_path', log_interval = '$log_interval'";
+        $db->query($sql);
+
+        $settings_updated = True;
+    }
+
+    // Fetch log settings info from DB.
+    $sql = "SELECT * FROM log_settings";
+    $result = $db->query($sql);
+    if (!isset($result)) {
+        $db->close();
+        die("設定より監視ログを指定して下さい。");
+    }
+
+    while ($row = $result->fetchArray()) {
+        $log_path = $row['log_path'];
+        $log_interval = $row['log_interval'];
+    }
+
+    $db->close();
     ?>
 
     <body>
@@ -38,23 +61,26 @@
                     <table width="100%">
                         <tbody>
                             <tr>
-                                <th>ユーザー名</th>
-                                <th>メールアドレス</th>
-                                <th>削除</th>
+                                <th>ログの位置</th>
+                                <th>ログのインターバル</th>
+                                <th></th>
                             </tr>
+                        <form id="logForm" name="logForm" action="" method="POST">
                             <tr>
-                                <td>yoshio</td>
-                                <td>aaa@a.com</td>
-                                <td><form><input type="submit"  value="削除"></form></td>
+                            <input type="hidden" id="log_settings" name="log_settings" value="log_settings">
+                            <td><input type="text" id="log_path" name="log_path" value="<?php echo $log_path ?>"></td>
+                            <td><input type="text" id="log_interval" name="log_interval" value="<?php echo $log_interval ?>"></td>
+                            <td><input type="submit" value="反映"></td>
                             </tr>
-                            <tr>
-                                <td>yoshio2</td>
-                                <td>bbb@b.com</td>
-                                <td><form><input type="submit"  value="削除"></form></td>
-                            </tr>
+                        </form>
                         </tbody>
                     </table>
-
+                    <?php
+                    if ($settings_updated)
+                    {
+                        echo '設定を反映しました。';
+                    }
+                    ?>
                 </div>
 
             </div>
