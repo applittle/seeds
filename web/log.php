@@ -55,6 +55,9 @@
             var dup_array = [];
             var host_array = [];
             var year_month_map = new Object();
+            var host_selected = null;
+            var year_selected = null;
+            var month_selected = null;
 
             function funcCompare(a, b) {
                 if (a.date < b.date)
@@ -71,12 +74,20 @@
             // Rebuild month selector
             function year_changed()
             {
-                var year_selected = $("select[name='year_selector']").val();
+                year_selected = $("select[name='year_selector']").val();
                 // Based on selected year, generating month selector
                 $("#select-box").append("<select id='month_selector' name='month_selector'>");
                 for (var i = 0; i < year_month_map[year_selected].length; i++)
                 {
-                    $('#month_selector').append($('<option>').html(year_month_map[year_selected][i]));
+                    if (month_selected == year_month_map[year_selected][i])
+                    {
+                        alert(month_selected);
+                        $('#month_selector').append($('<option selected>').html(year_month_map[year_selected][i]));
+                    }
+                    else
+                    {
+                        $('#month_selector').append($('<option>').html(year_month_map[year_selected][i]));
+                    }
                 }
                 $("#select-box").append('</select>');
                 show_log();
@@ -85,9 +96,9 @@
             function show_log()
             {
                 $('#report-box').html('&nbsp');
-                var host_selected = $("select[name='host_selector']").val();
-                var year_selected = $("select[name='year_selector']").val();
-                var month_selected = $("select[name='month_selector']").val();
+                host_selected = $("select[name='host_selector']").val();
+                year_selected = $("select[name='year_selector']").val();
+                month_selected = $("select[name='month_selector']").val();
 
                 // Generating show log table.
                 $('#report-box').append('<table id="log_table" width="100%">');
@@ -125,6 +136,9 @@
             $(function () {
                 var update = function () {
                     var data = {'log': '/var/log/samba/'};
+                    host_selected = $("select[name='host_selector']").val();
+                    year_selected = $("select[name='year_selector']").val();
+                    month_selected = $("select[name='month_selector']").val();
 
                     $.ajax('./check_log.php', {
                         type: "POST",
@@ -189,7 +203,14 @@
                             // Generating host selector
                             for (var i = 0; i < host_array.length; i++)
                             {
-                                $('#host_selector').append($('<option>').html(host_array[i]));
+                                if (host_array[i] == host_selected)
+                                {
+                                    $('#host_selector').append($('<option selected>').html(host_array[i]));
+                                }
+                                else
+                                {
+                                    $('#host_selector').append($('<option>').html(host_array[i]));
+                                }
                             }
                             $('#select-box').append($('</select>'));
                             $('#host_selector').change(function () {
@@ -200,7 +221,14 @@
                             $("#select-box").append("<select id='year_selector' name='year_selector'>");
                             for (var year in year_month_map)
                             {
-                                $('#year_selector').append($('<option>').html(year));
+                                if (year_selected == year)
+                                {
+                                    $('#year_selector').append($('<option selected>').html(year));
+                                }
+                                else
+                                {
+                                    $('#year_selector').append($('<option>').html(year));
+                                }
                             }
                             $('#select-box').append($('</select>'));
                             $('#year_selector').change(function () {
