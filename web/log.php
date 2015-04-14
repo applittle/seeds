@@ -11,6 +11,23 @@
         session_start();
     }
     $userid = $_SESSION['USERID'];
+
+    // Using sqlite as DB source, create a new DB 'seeds' if not exists.
+    $db = new SQLite3('./seeds.db');
+
+    // Fetch log settings info from DB.
+    $sql = "SELECT * FROM log_settings";
+    $result = $db->query($sql);
+    if (!isset($result)) {
+        $db->close();
+        die("設定より監視ログを指定して下さい。");
+    }
+
+    while ($row = $result->fetchArray()) {
+        $log_interval = $row['log_interval'];
+    }
+
+    $db->close();
     ?>
 
     <body>
@@ -151,7 +168,7 @@
                             {
                                 // Parse date to javascript date
                                 arr[i]['p_date'] = Date.parse(arr[i].date);
-                                // id consist of host name___Date
+                                // id consists of host name___Date
                                 var id = arr[i].host + '___' + arr[i].date;
 
                                 if (dup_array.indexOf(id) < 0)
@@ -250,7 +267,7 @@
                     });
                 };
 
-                var counter = 60;
+                var counter = Number(<?php echo $log_interval; ?>);
                 setInterval(function () {
                     counter = counter - 1;
                     $('#counter').html('ログの更新まで ' + counter + '...');

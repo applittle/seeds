@@ -74,6 +74,7 @@ $outArray = array();
 
 foreach ($logs as $v) {
     $l = $log_location . $v;
+    $log = null;
     exec('tail -n 10000 ' . $l, $log);
     $v = str_replace('log.', '', $v);
 
