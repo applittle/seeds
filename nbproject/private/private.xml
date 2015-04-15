@@ -5,8 +5,8 @@
         <group>
             <file>file:/Library/WebServer/Documents/seeds/web/access.php</file>
             <file>file:/Library/WebServer/Documents/seeds/web/log.php</file>
-            <file>file:/Library/WebServer/Documents/seeds/web/registCheck.php</file>
-            <file>file:/Library/WebServer/Documents/seeds/web/test.php</file>
+            <file>file:/Library/WebServer/Documents/seeds/web/settings.php</file>
+            <file>file:/Library/WebServer/Documents/seeds/web/check_log.php</file>
             <file>file:/Library/WebServer/Documents/seeds/web/index.php</file>
         </group>
     </open-files>

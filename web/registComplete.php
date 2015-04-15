@@ -13,7 +13,7 @@ if ($_POST['mode'] == "registComplete") {
 
         $userid = $_SESSION['userid'];
         $email = $_SESSION['email'];
-        $password = md5($_SESSION['password']);
+        $password = $_SESSION['password'];
 
         $sql = "INSERT INTO account_info (userid, password, email) VALUES ('$userid', '$password', '$email')";
         $db->query($sql);

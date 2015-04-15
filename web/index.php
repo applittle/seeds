@@ -84,7 +84,7 @@ EOF;
                 $db_hashed_pwd = $row['password'];
             }
 
-            if ($db_hashed_pwd === md5($_POST["password"])) {
+            if ($db_hashed_pwd === $_POST["password"]) {
                 session_regenerate_id(true);
                 $_SESSION["USERID"] = $_POST["userid"];
                 header("Location: log.php");
