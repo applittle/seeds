@@ -111,28 +111,28 @@ EOF;
                                         if (startsWith($buffer, '[')) {
                                             $flag = isShareFolder($buffer); // Checks flag state
                                             if (!$flag) {
-                                                echo '<td><input type="submit" value="変更反映"></td>';
+                                                echo '<td><input type="submit" value="削除"></td>';
                                                 echo '</form>';
                                                 echo '</tr>';
                                                 continue;
                                             } else {
                                                 if (!empty($share_name) and ! empty($path)) {
-                                                    echo '<td><input type="submit" value="変更反映"></td>';
+                                                    echo '<td><input type="submit" value="削除"></td>';
                                                     echo '</form>';
                                                     echo '</tr>';
                                                 }
 
                                                 $share_name = substr(trim($buffer), 1, -1);
                                                 echo "<tr><form id='accessForm' name='accessForm' action='' method='POST'>";
-                                                echo "<td><input type='text' id='share_name' name='share_name' value='$share_name'></td>";
-                                                echo "<input type='hidden' id='action' name='action' value='modify'>";
+                                                echo "<td>$share_name</td>";
+                                                echo "<input type='hidden' id='action' name='action' value='delete'>";
                                             }
                                         }
 
                                         if (strrpos($buffer, 'path') !== false) {
                                             $t = explode('=', $buffer);
                                             $path = $t[1];
-                                            echo "<td><input type='text' id='path' name='path' value='$path'></td>";
+                                            echo "<td>$path</td>";
                                         }
 
                                         if (strrpos($buffer, 'writeable') !== false) {
@@ -148,7 +148,7 @@ EOF;
                                         if (strrpos($buffer, 'valid users') !== false) {
                                             $t = explode('=', $buffer);
                                             $users = $t[1];
-                                            echo "<td><input type='text' id='users' name='users' value='$users'></td>";
+                                            echo "<td>$users</td>";
                                         }
 
                                         if (strrpos($buffer, 'guest ok') !== false) {
@@ -165,7 +165,7 @@ EOF;
                         }
 
                         if ($flag) {
-                            echo '<td><input type="submit" value="変更反映"></td>';
+                            echo '<td><input type="submit" value="削除"></td>';
                             echo '</form>';
                             echo '</tr>';
                         }
