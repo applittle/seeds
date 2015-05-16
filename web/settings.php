@@ -18,6 +18,7 @@
     if (isset($_POST['log_settings'])) {
         $log_path = $_POST['log_path'];
         $log_interval = $_POST['log_interval'];
+        $config_path = $_POST['config_path'];
 
         $sql = "UPDATE settings SET log_path = '$log_path', log_interval = '$log_interval'";
         $db->query($sql);
@@ -26,7 +27,7 @@
     }
 
     // Fetch log settings info from DB.
-    $sql = "SELECT * FROM log_settings";
+    $sql = "SELECT * FROM settings";
     $result = $db->query($sql);
     if (!isset($result)) {
         $db->close();
@@ -36,6 +37,7 @@
     while ($row = $result->fetchArray()) {
         $log_path = $row['log_path'];
         $log_interval = $row['log_interval'];
+        $config_path = $row['config_path'];
     }
 
     $db->close();
@@ -70,6 +72,7 @@
                             <input type="hidden" id="log_settings" name="log_settings" value="log_settings">
                             <td><input type="text" id="log_path" name="log_path" value="<?php echo $log_path ?>"></td>
                             <td><input type="text" id="log_interval" name="log_interval" value="<?php echo $log_interval ?>"></td>
+                            <td><input type="text" id="config_path" name="config_path" value="<?php echo $config_path ?>"></td>
                             <td><input type="submit" value="反映"></td>
                             </tr>
                         </form>

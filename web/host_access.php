@@ -30,9 +30,9 @@
                             <th>共有フォルダ追加</th>
                             <td>共有フォルダ名：<input type="text" id="share_name" name="share_name"></td>
                             <td>パス名：<input type="text" id="path" name="path"></td>
-                            <td>ユーザ名（複数ユーザを追加する場合は,で区切る 例）takashi,takeshi,yumi）：<input type="text" id="user_name" name="user_name"></td>
-                            <input type="hidden" id="action" name="action" value="need_add">
-                            <td><input type="submit" id="add_host" name="add_host" value="追加"></td>
+                            <td>ユーザ名（複数ユーザを追加する場合は,で区切る 例）takashi,takeshi,yumi）：<input type="text" id="users" name="users"></td>
+                            <input type="hidden" id="action" name="action" value="add">
+                            <td><input type="submit" id="add_folder" name="add_folder" value="追加"></td>
                         </form>
                         </tr>
                         </tbody>
@@ -54,85 +54,37 @@
 
                         return $flag;
                     }
-                    
-                    function addShareInfo($conf_file, $db, $share_name, $path, $users)
-                    {
-                        $contents = file_get_contents($conf_file);
-                    }
 
-                    function updateShareInfo($conf_file, $db, $share_name, $path, $users) {
-                        $fp = fopen($conf_file, 'r');
-                        $newLines = '';
-                        $isShareExists = False;
-                        if ($fp) {
-                            if (flock($fp, LOCK_SH)) {
-                                while (!feof($fp)) {
-                                    $buffer = fgets($fp);
-                                    if (startsWith($buffer, '[')) {
-                                        $share_name_old = substr($buffer, 1, -1);
-                                        if ($share_name_old == $share_name) {
-                                            $isShareExists = True;
-                                        }
-                                    }
-
-                                    if (strrpos($buffer, 'path') !== false and $isShareExists) {
-                                        $t = explode('=', $buffer);
-                                        $p = $t[0] . ' = ' . $path;
-                                        $newLines .= $p;
-                                        continue;
-                                    }
-
-                                    if (strrpos($buffer, 'valid users') !== false and $isShareExists) {
-                                        $t = explode('=', $buffer);
-                                        $p = $t[0] . ' = ' . $users;
-                                        $newLines .= $p;
-                                        continue;
-                                    }
-
-                                    $sql = "update folder_access_info set share_name='$share_name', path='$path', users='$users' where share_name='$share_name'";
-                                    $db->query($sql);
-                                }
-                                flock($fp, LOCK_UN);
-                            } else {
-                                print('ファイルロックに失敗しました');
-                            }
+                    function addShareInfoToFile($conf_file, $share_name, $path, $users) {
+                        if (!file_exists($conf_file)) {
+                            die('コンフィグファイルが見つかりません。設定を確認してください。');
                         }
 
-                        fclose($fp);
+                        $contents = file_get_contents($conf_file);
+                        $contents .= "\n";
+                        $contents .= "[" . $share_name . "]" . "\n";
+                        $contents .= "path = " . $path . "\n";
+                        $contents .= "writeable = yes" . "\n";
+                        $contents .= "force create mode = 0666" . "\n";
+                        $contents .= "force directory mode = 0777" . "\n";
+                        $contents .= "valid users = " . $users . "\n";
+
+                        file_put_contents($conf_file, $contents);
+                        `/etc/init.d/samba restart`;
                     }
 
-                    if (session_status() !== PHP_SESSION_ACTIVE) {
-                        session_start();
-                    }
-                    $userid = $_SESSION['USERID'];
-                    // Using sqlite as DB source, create a new DB 'seeds' if not exists.
-                    $db = new SQLite3('./seeds.db');
+                    function extractShareInfoAndShow($conf_file) {
+                        if (!file_exists($conf_file)) {
+                            die('コンフィグファイルが見つかりません。設定を確認してください。');
+                        }
 
-                    if ($_POST["action"] == "need_add") {
-                        // Then insert host info
-                        $share_name = $_POST["share_name"];
-                        $path = $_POST['path'];
-                        $users = $_POST['users'];
-                        $sql = "INSERT INTO folder_access_info (share_name, path, users) VALUES ('$share_name', '$path', '$users')";
-                        $db->query($sql);
-                    }
+                        $fp = fopen($conf_file, 'r');
 
-                    if ($_POST["action"] == "modify") {
-                        // Then insert host info
-                        $share_name = $_POST["share_name"];
-                        $path = $_POST['path'];
-                        $users = $_POST['users'];
-                        $sql = "UPDATE folder_access_info SET share_name='$share_name', path='$path', users='$users'";
-                        $db->query($sql);
-                    }
+                        $flag = False;
+                        $share_name = '';
+                        $path = '';
+                        $users = '';
 
-                    // Fetch host access info from DB.
-                    $sql = "SELECT * FROM folder_access_info";
-                    $result = $db->query($sql);
-                    if (!isset($result)) {
-                        $db->close();
-                        echo "表示できる情報がありません。";
-                    } else {
                         echo <<<EOF
                         <table width="100%">
                         <tbody>
@@ -143,24 +95,117 @@
                             </tr>
 EOF;
 
-                        while ($row = $result->fetchArray()) {
-                            $share_name = $row['share_name'];
-                            $path = $row['path'];
-                            $users = $row['users'];
+                        if ($fp) {
+                            if (flock($fp, LOCK_SH)) {
+                                while (!feof($fp)) {
+                                    $buffer = fgets($fp);
 
-                            echo '<tr>';
-                            echo '<form id="accessForm" name="accessForm" action="" method="POST">';
-                            echo "<td>$share_name</td>";
-                            echo "<td><input type='text' id='folder_path' name='folder_path' value='$path'></td>";
-                            echo "<td><input type='text' id='users' name='users' value='$users'></td>";
-                            echo "<input type='hidden' id='action' name='action' value='modify'>";
-                            echo '<input type="submit" value="変更反映">';
+                                    if (!$flag) {
+                                        // Drills down and find [share] folders for the first time.
+                                        if (startsWith($buffer, '[')) {
+                                            $flag = isShareFolder($buffer);
+                                        }
+                                    }
+
+                                    if ($flag) {
+                                        if (startsWith($buffer, '[')) {
+                                            $flag = isShareFolder($buffer); // Checks flag state
+                                            if (!$flag) {
+                                                echo '<td><input type="submit" value="変更反映"></td>';
+                                                echo '</form>';
+                                                echo '</tr>';
+                                                continue;
+                                            } else {
+                                                if (!empty($share_name) and ! empty($path)) {
+                                                    echo '<td><input type="submit" value="変更反映"></td>';
+                                                    echo '</form>';
+                                                    echo '</tr>';
+                                                }
+
+                                                $share_name = substr(trim($buffer), 1, -1);
+                                                echo "<tr><form id='accessForm' name='accessForm' action='' method='POST'>";
+                                                echo "<td><input type='text' id='share_name' name='share_name' value='$share_name'></td>";
+                                                echo "<input type='hidden' id='action' name='action' value='modify'>";
+                                            }
+                                        }
+
+                                        if (strrpos($buffer, 'path') !== false) {
+                                            $t = explode('=', $buffer);
+                                            $path = $t[1];
+                                            echo "<td><input type='text' id='path' name='path' value='$path'></td>";
+                                        }
+
+                                        if (strrpos($buffer, 'writeable') !== false) {
+                                            $t = explode('=', $buffer);
+                                            $writeable = $t[1];
+                                        }
+
+                                        if (strrpos($buffer, 'force create mode') !== false) {
+                                            $t = explode('=', $buffer);
+                                            $force_create_mode .= $t[1];
+                                        }
+
+                                        if (strrpos($buffer, 'valid users') !== false) {
+                                            $t = explode('=', $buffer);
+                                            $users = $t[1];
+                                            echo "<td><input type='text' id='users' name='users' value='$users'></td>";
+                                        }
+
+                                        if (strrpos($buffer, 'guest ok') !== false) {
+                                            $t = explode('=', $buffer);
+                                            $guest_ok .= $t[1];
+                                        }
+                                    }
+                                }
+
+                                flock($fp, LOCK_UN);
+                            } else {
+                                print('ファイルロックに失敗しました');
+                            }
+                        }
+
+                        if ($flag) {
+                            echo '<td><input type="submit" value="変更反映"></td>';
                             echo '</form>';
                             echo '</tr>';
                         }
+
+                        fclose($fp);
+
+                        echo '</tbody>';
+                        echo '</table>';
                     }
-                    echo '</tbody>';
-                    echo '</table>';
+
+                    if (session_status() !== PHP_SESSION_ACTIVE) {
+                        session_start();
+                    }
+                    $userid = $_SESSION['USERID'];
+                    // Using sqlite as DB source, create a new DB 'seeds' if not exists.
+                    $db = new SQLite3('./seeds.db');
+                    // Fetch host access info from DB.
+                    $sql = "SELECT config_path FROM settings";
+                    $result = $db->query($sql);
+                    while ($row = $result->fetchArray()) {
+                        $config_path = $row['config_path'];
+                    }
+
+                    if ($_POST["action"] == "add") {
+                        // Then insert host info
+                        $share_name = $_POST["share_name"];
+                        $path = $_POST['path'];
+                        $users = $_POST['users'];
+                        addShareInfoToFile($config_path, $share_name, $path, $users);
+                    }
+
+                    if ($_POST["action"] == "modify") {
+                        // Then insert host info
+                        $share_name = $_POST["share_name"];
+                        $path = $_POST['path'];
+                        $users = $_POST['users'];
+                    }
+
+                    // Retrieves share info from config file.
+                    extractShareInfoAndShow($config_path);
 
                     $db->close();
                     ?> 

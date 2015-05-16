@@ -8,90 +8,6 @@
 
     <?php
 
-    function startsWith($haystack, $needle) {
-        // search backwards starting from haystack length characters from the end
-        return $needle === "" || strrpos($haystack, $needle, -strlen($haystack)) !== FALSE;
-    }
-
-    function isShareFolder($str) {
-        $flag = False;
-        // Drills down and find [share] folders.
-        if (strpos($str, 'print') === false and strpos($str, 'global') === false) {
-            $flag = True;
-        }
-
-        return $flag;
-    }
-
-    function extractShareInfo($conf_file, $db) {
-        $fp = fopen($conf_file, 'r');
-
-        $flag = False;
-        $share_name = '';
-        $path = '';
-        $users = '';
-
-        if ($fp) {
-            if (flock($fp, LOCK_SH)) {
-                while (!feof($fp)) {
-                    $buffer = fgets($fp);
-
-                    if (!$flag) {
-                        // Drills down and find [share] folders for the first time.
-                        if (startsWith($buffer, '[')) {
-                            $flag = isShareFolder($buffer);
-                        }
-                    }
-
-                    if ($flag) {
-                        if (startsWith($buffer, '[')) {
-                            $flag = isShareFolder($buffer);
-                            if (!$flag) {
-                                continue;
-                            } else {
-                                $share_name = substr(trim($buffer), 1, -1);
-                            }
-                        }
-
-                        if (strrpos($buffer, 'path') !== false) {
-                            $t = explode('=', $buffer);
-                            $path = $t[1];
-                        }
-
-                        if (strrpos($buffer, 'writeable') !== false) {
-                            $t = explode('=', $buffer);
-                            $writeable = $t[1];
-                        }
-
-                        if (strrpos($buffer, 'force create mode') !== false) {
-                            $t = explode('=', $buffer);
-                            $force_create_mode .= $t[1];
-                        }
-
-                        if (strrpos($buffer, 'valid users') !== false) {
-                            $t = explode('=', $buffer);
-                            $users .= $t[1];
-                        }
-
-                        if (strrpos($buffer, 'guest ok') !== false) {
-                            $t = explode('=', $buffer);
-                            $guest_ok .= $t[1];
-                        }
-                    }
-                }
-
-                $sql = "insert into folder_access_info (share_name, path, users) values ('$share_name', '$path', '$users')";
-                $db->query($sql);
-
-                flock($fp, LOCK_UN);
-            } else {
-                print('ファイルロックに失敗しました');
-            }
-        }
-
-        fclose($fp);
-    }
-
     if (session_status() !== PHP_SESSION_ACTIVE) {
         session_start();
     }
@@ -155,14 +71,6 @@ EOF;
         $sql = "INSERT INTO settings (log_path, log_interval, config_path) VALUES ('/var/log/samba/', '60', '/etc/samba/smb.conf')";
         $db->query($sql);
     }
-
-    $sql = "SELECT config_path FROM settings";
-    while ($row = $result->fetchArray()) {
-        $config_path = $row['config_path'];
-    }
-
-    // Extract share info
-    extractShareInfo($config_path, $db);
 
 // エラーメッセージの初期化
     $errorMessage = "";
