@@ -19,7 +19,7 @@
         $log_path = $_POST['log_path'];
         $log_interval = $_POST['log_interval'];
 
-        $sql = "UPDATE log_settings SET log_path = '$log_path', log_interval = '$log_interval'";
+        $sql = "UPDATE settings SET log_path = '$log_path', log_interval = '$log_interval'";
         $db->query($sql);
 
         $settings_updated = True;
