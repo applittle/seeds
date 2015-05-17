@@ -73,6 +73,47 @@
                         `/etc/init.d/samba restart`;
                     }
 
+                    function deleteShareInfoFromFile($conf_file, $share_name) {
+                        if (!file_exists($conf_file)) {
+                            die('コンフィグファイルが見つかりません。設定を確認してください。');
+                        }
+
+                        $fp = fopen($conf_file, 'r');
+                        $flag = False;
+                        $line = '';
+
+                        if ($fp) {
+                            if (flock($fp, LOCK_SH)) {
+                                while (!feof($fp)) {
+                                    $buffer = fgets($fp);
+
+                                    if (startsWith($buffer, '[')) {
+                                        $flag = isShareFolder($buffer);
+
+                                        if ($flag) {
+                                            $share_name_o = substr(trim($buffer), 1, -1);
+                                            if (trim($share_name) != $share_name_o) {
+                                                $flag = False;
+                                            }
+                                        }
+                                    }
+
+                                    if (!$flag) {
+                                        $line .= $buffer;
+                                    }
+                                }
+
+                                flock($fp, LOCK_UN);
+                            } else {
+                                print('ファイルロックに失敗しました');
+                            }
+
+                            file_put_contents($conf_file, $line);
+                        }
+
+                        fclose($fp);
+                    }
+
                     function extractShareInfoAndShow($conf_file) {
                         if (!file_exists($conf_file)) {
                             die('コンフィグファイルが見つかりません。設定を確認してください。');
@@ -126,6 +167,7 @@ EOF;
                                                 echo "<tr><form id='accessForm' name='accessForm' action='' method='POST'>";
                                                 echo "<td>$share_name</td>";
                                                 echo "<input type='hidden' id='action' name='action' value='delete'>";
+                                                echo "<input type='hidden' id='share_name' name='share_name' value='$share_name'>";
                                             }
                                         }
 
@@ -197,11 +239,12 @@ EOF;
                         addShareInfoToFile($config_path, $share_name, $path, $users);
                     }
 
-                    if ($_POST["action"] == "modify") {
+                    if ($_POST["action"] == "delete") {
                         // Then insert host info
                         $share_name = $_POST["share_name"];
                         $path = $_POST['path'];
                         $users = $_POST['users'];
+                        deleteShareInfoFromFile($config_path, $share_name);
                     }
 
                     // Retrieves share info from config file.
