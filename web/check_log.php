@@ -42,7 +42,7 @@ $userid = $_SESSION['USERID'];
 $db = new SQLite3('./seeds.db');
 
 // Fetch log settings info from DB.
-$sql = "SELECT * FROM log_settings";
+$sql = "SELECT * FROM settings";
 $result = $db->query($sql);
 if (!isset($result)) {
     $db->close();

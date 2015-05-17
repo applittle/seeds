@@ -109,6 +109,7 @@
                             }
 
                             file_put_contents($conf_file, $line);
+                            `/etc/init.d/samba restart`;
                         }
 
                         fclose($fp);

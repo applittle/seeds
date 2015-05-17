@@ -13,26 +13,23 @@
 
     $userid = $_SESSION['USERID'];
 
-    function getLogInteval() {
+    // Using sqlite as DB source, create a new DB 'seeds' if not exists.
+    $db = new SQLite3('./seeds.db');
 
-        // Using sqlite as DB source, create a new DB 'seeds' if not exists.
-        $db = new SQLite3('./seeds.db');
-
-        // Fetch log settings info from DB.
-        $sql = "SELECT * FROM log_settings";
-        $result = $db->query($sql);
-        if (!isset($result)) {
-            $db->close();
-            die("設定より監視ログを指定して下さい。");
-        }
-
-        while ($row = $result->fetchArray()) {
-            $log_interval = $row['log_interval'];
-        }
-
+    // Fetch log settings info from DB.
+    $sql = "SELECT * FROM settings";
+    $result = $db->query($sql);
+    if (!isset($result)) {
         $db->close();
-        return $log_interval;
+        die("設定より監視ログを指定して下さい。");
     }
+
+    while ($row = $result->fetchArray()) {
+        $log_interval = $row['log_interval'];
+        $log_path = $row['log_path'];
+    }
+
+    $db->close();
     ?>
 
     <body>
@@ -101,7 +98,6 @@
                 {
                     if (month_selected == year_month_map[year_selected][i])
                     {
-                        alert(month_selected);
                         $('#month_selector').append($('<option selected>').html(year_month_map[year_selected][i]));
                     }
                     else
@@ -155,7 +151,7 @@
 
             $(function () {
                 var update = function () {
-                    var data = {'log': '/var/log/samba/'};
+                    //var data = {'log': <?php echo $log_path; ?>};
                     host_selected = $("select[name='host_selector']").val();
                     year_selected = $("select[name='year_selector']").val();
                     month_selected = $("select[name='month_selector']").val();
@@ -164,7 +160,7 @@
                         type: "POST",
                         async: true,
                         cache: false,
-                        data: data,
+                        //data: data,
                         success: function (res) {
                             var arr = JSON.parse(res);
                             console.log('Returned array length: ' + arr.length);
@@ -273,7 +269,6 @@
                     });
                 };
 
-<?php $log_interval = getLogInteval(); ?>
                 var counter = Number(<?php echo $log_interval; ?>);
                 setInterval(function () {
                     if (log_array.length > 0)
